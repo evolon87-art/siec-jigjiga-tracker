@@ -286,6 +286,17 @@ function cuzHesapla(sayfa: number) {
   return Math.min(30, Math.floor((sayfa - 1) / SAYFA_BASINA_CUZ) + 1);
 }
 
+function yasHesapla(dogum?: string): number | null {
+  if (!dogum) return null;
+  const d = new Date(dogum);
+  if (isNaN(d.getTime())) return null;
+  const simdi = new Date();
+  let yas = simdi.getFullYear() - d.getFullYear();
+  const ayFark = simdi.getMonth() - d.getMonth();
+  if (ayFark < 0 || (ayFark === 0 && simdi.getDate() < d.getDate())) yas--;
+  return yas >= 0 && yas < 130 ? yas : null;
+}
+
 function gunBaslangici(d = new Date()) {
   const x = new Date(d);
   x.setHours(0, 0, 0, 0);
@@ -905,12 +916,13 @@ function Index() {
               <div className="overflow-x-auto">
               <Table className="table-fixed min-w-[540px]">
                 <colgroup>
+                  <col className="w-[7%]" />
+                  <col className="w-[11%]" />
+                  <col className="w-[28%]" />
+                  <col className="w-[14%]" />
                   <col className="w-[8%]" />
-                  <col className="w-[12%]" />
-                  <col className="w-[30%]" />
                   <col className="w-[15%]" />
                   <col className="w-[17%]" />
-                  <col className="w-[18%]" />
                 </colgroup>
                 <TableHeader>
                   <TableRow className="bg-muted/40">
@@ -925,6 +937,9 @@ function Index() {
                     </TableHead>
                     <TableHead className="px-1 text-[11px] sm:px-3 sm:text-sm">
                       Sınıf
+                    </TableHead>
+                    <TableHead className="px-1 text-center text-[11px] sm:px-3 sm:text-sm">
+                      Yaş
                     </TableHead>
                     <TableHead className="px-1 text-[11px] sm:px-3 sm:text-sm">
                       Grup
@@ -969,6 +984,9 @@ function Index() {
                       <TableCell className="min-w-0 px-1 py-2 text-[11px] text-muted-foreground sm:px-3 sm:py-3 sm:text-sm">
                         <span className="block truncate">{t.sinif || "—"}</span>
                       </TableCell>
+                      <TableCell className="px-1 py-2 text-center text-[11px] tabular-nums text-muted-foreground sm:px-3 sm:py-3 sm:text-sm">
+                        {yasHesapla(t.dogum) ?? "—"}
+                      </TableCell>
                       <TableCell className="min-w-0 px-1 py-2 text-[11px] text-muted-foreground sm:px-3 sm:py-3 sm:text-sm">
                         <span className="block truncate">
                           {t.grup
@@ -993,7 +1011,7 @@ function Index() {
                   {aidatTalebeler.length === 0 && (
                     <TableRow>
                       <TableCell
-                        colSpan={6}
+                        colSpan={7}
                         className="py-10 text-center text-sm text-muted-foreground"
                       >
                         Henüz aidat kaydı olan talebe yok.
@@ -1602,7 +1620,7 @@ function ProfilDiyalog({
   onFotoDegistir: (t: Talebe, fotoUrl: string) => void;
   onNotKaydet: (
     t: Talebe,
-    patch: Partial<Pick<Talebe, "telefon" | "notlar" | "isim" | "sinif">>,
+    patch: Partial<Pick<Talebe, "telefon" | "notlar" | "isim" | "sinif" | "dogum">>,
   ) => void;
   onSil: () => void;
 }) {
@@ -1611,6 +1629,7 @@ function ProfilDiyalog({
   const [hata, setHata] = useState<string | null>(null);
   const [telefon, setTelefon] = useState("");
   const [sinif, setSinif] = useState("");
+  const [dogum, setDogum] = useState("");
   const [notlar, setNotlar] = useState("");
   const [fotoBuyuk, setFotoBuyuk] = useState(false);
   const [isimDuzenle, setIsimDuzenle] = useState(false);
@@ -1621,6 +1640,7 @@ function ProfilDiyalog({
     if (talebe) {
       setTelefon(talebe.telefon ?? "");
       setSinif(talebe.sinif ?? "");
+      setDogum(talebe.dogum ?? "");
       setNotlar(talebe.notlar ?? "");
       setHata(null);
       setIsimDuzenle(false);
@@ -1804,6 +1824,18 @@ function ProfilDiyalog({
           </div>
           <div className="space-y-1.5">
             <Label className="flex items-center gap-1.5 text-sm">
+              Doğum tarihi
+            </Label>
+            <Input
+              type="date"
+              value={dogum}
+              onChange={(e) => setDogum(e.target.value)}
+              disabled={!hocaModu}
+              className="text-base"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="flex items-center gap-1.5 text-sm">
               <Phone className="h-3.5 w-3.5" /> {t("telefon")}
             </Label>
             <div className="flex gap-2">
@@ -1852,6 +1884,7 @@ function ProfilDiyalog({
                 onNotKaydet(talebe, {
                   telefon: telefon.trim(),
                   sinif: sinif.trim(),
+                  dogum: dogum || "",
                   notlar: notlar.trim(),
                 });
                 onClose();
