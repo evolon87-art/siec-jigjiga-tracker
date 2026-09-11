@@ -286,6 +286,17 @@ function cuzHesapla(sayfa: number) {
   return Math.min(30, Math.floor((sayfa - 1) / SAYFA_BASINA_CUZ) + 1);
 }
 
+function yasHesapla(dogum?: string): number | null {
+  if (!dogum) return null;
+  const d = new Date(dogum);
+  if (isNaN(d.getTime())) return null;
+  const simdi = new Date();
+  let yas = simdi.getFullYear() - d.getFullYear();
+  const ayFark = simdi.getMonth() - d.getMonth();
+  if (ayFark < 0 || (ayFark === 0 && simdi.getDate() < d.getDate())) yas--;
+  return yas >= 0 && yas < 130 ? yas : null;
+}
+
 function gunBaslangici(d = new Date()) {
   const x = new Date(d);
   x.setHours(0, 0, 0, 0);
@@ -1000,7 +1011,7 @@ function Index() {
                   {aidatTalebeler.length === 0 && (
                     <TableRow>
                       <TableCell
-                        colSpan={6}
+                        colSpan={7}
                         className="py-10 text-center text-sm text-muted-foreground"
                       >
                         Henüz aidat kaydı olan talebe yok.
