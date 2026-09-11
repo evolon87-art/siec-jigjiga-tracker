@@ -1620,7 +1620,7 @@ function ProfilDiyalog({
   onFotoDegistir: (t: Talebe, fotoUrl: string) => void;
   onNotKaydet: (
     t: Talebe,
-    patch: Partial<Pick<Talebe, "telefon" | "notlar" | "isim" | "sinif">>,
+    patch: Partial<Pick<Talebe, "telefon" | "notlar" | "isim" | "sinif" | "dogum">>,
   ) => void;
   onSil: () => void;
 }) {
@@ -1629,6 +1629,7 @@ function ProfilDiyalog({
   const [hata, setHata] = useState<string | null>(null);
   const [telefon, setTelefon] = useState("");
   const [sinif, setSinif] = useState("");
+  const [dogum, setDogum] = useState("");
   const [notlar, setNotlar] = useState("");
   const [fotoBuyuk, setFotoBuyuk] = useState(false);
   const [isimDuzenle, setIsimDuzenle] = useState(false);
@@ -1639,6 +1640,7 @@ function ProfilDiyalog({
     if (talebe) {
       setTelefon(talebe.telefon ?? "");
       setSinif(talebe.sinif ?? "");
+      setDogum(talebe.dogum ?? "");
       setNotlar(talebe.notlar ?? "");
       setHata(null);
       setIsimDuzenle(false);
@@ -1822,6 +1824,18 @@ function ProfilDiyalog({
           </div>
           <div className="space-y-1.5">
             <Label className="flex items-center gap-1.5 text-sm">
+              Doğum tarihi
+            </Label>
+            <Input
+              type="date"
+              value={dogum}
+              onChange={(e) => setDogum(e.target.value)}
+              disabled={!hocaModu}
+              className="text-base"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="flex items-center gap-1.5 text-sm">
               <Phone className="h-3.5 w-3.5" /> {t("telefon")}
             </Label>
             <div className="flex gap-2">
@@ -1870,6 +1884,7 @@ function ProfilDiyalog({
                 onNotKaydet(talebe, {
                   telefon: telefon.trim(),
                   sinif: sinif.trim(),
+                  dogum: dogum || "",
                   notlar: notlar.trim(),
                 });
                 onClose();
