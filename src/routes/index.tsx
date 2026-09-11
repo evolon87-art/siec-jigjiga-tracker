@@ -698,14 +698,16 @@ function Index() {
       bilgi: [`Toplam talebe: ${aidatTalebeler.length}`],
       sutunlar: [
         { baslik: "Sıra No", genislik: "10%", hiza: "center" },
-        { baslik: "Talebe İsmi", genislik: "34%" },
-        { baslik: "Sınıf", genislik: "16%" },
-        { baslik: "Grup", genislik: "18%" },
-        { baslik: "Telefon", genislik: "22%" },
+        { baslik: "Talebe İsmi", genislik: "30%" },
+        { baslik: "Yaş", genislik: "10%", hiza: "center" },
+        { baslik: "Sınıf", genislik: "14%" },
+        { baslik: "Grup", genislik: "16%" },
+        { baslik: "Telefon", genislik: "20%" },
       ],
       satirlar: aidatTalebeler.map((t, i) => [
         i + 1,
         t.isim,
+        yasHesapla(t.dogum) ?? "—",
         t.sinif || "—",
         t.grup ? (GRUPLAR.find((g) => g.id === t.grup)?.ad ?? "—") : "—",
         t.telefon || "—",
@@ -916,35 +918,35 @@ function Index() {
               <div className="overflow-x-auto">
               <Table className="table-fixed min-w-[540px]">
                 <colgroup>
-                  <col className="w-[7%]" />
-                  <col className="w-[11%]" />
-                  <col className="w-[28%]" />
-                  <col className="w-[14%]" />
+                  <col className="w-[6%]" />
+                  <col className="w-[9%]" />
+                  <col className="w-[30%]" />
                   <col className="w-[8%]" />
-                  <col className="w-[15%]" />
+                  <col className="w-[14%]" />
+                  <col className="w-[16%]" />
                   <col className="w-[17%]" />
                 </colgroup>
                 <TableHeader>
                   <TableRow className="bg-muted/40">
-                    <TableHead className="px-1 text-center text-[11px] sm:px-3 sm:text-sm">
+                    <TableHead className="px-1 py-2 text-center text-[11px] sm:px-3 sm:text-sm">
                       #
                     </TableHead>
-                    <TableHead className="px-1 text-center text-[11px] sm:px-3 sm:text-sm">
+                    <TableHead className="px-1 py-2 text-center text-[11px] sm:px-3 sm:text-sm">
                       Profil
                     </TableHead>
-                    <TableHead className="px-1 text-[11px] sm:px-3 sm:text-sm">
+                    <TableHead className="px-1 py-2 text-left text-[11px] sm:px-3 sm:text-sm">
                       İsim
                     </TableHead>
-                    <TableHead className="px-1 text-[11px] sm:px-3 sm:text-sm">
-                      Sınıf
-                    </TableHead>
-                    <TableHead className="px-1 text-center text-[11px] sm:px-3 sm:text-sm">
+                    <TableHead className="px-1 py-2 text-center text-[11px] sm:px-3 sm:text-sm">
                       Yaş
                     </TableHead>
-                    <TableHead className="px-1 text-[11px] sm:px-3 sm:text-sm">
+                    <TableHead className="px-1 py-2 text-left text-[11px] sm:px-3 sm:text-sm">
+                      Sınıf
+                    </TableHead>
+                    <TableHead className="px-1 py-2 text-left text-[11px] sm:px-3 sm:text-sm">
                       Grup
                     </TableHead>
-                    <TableHead className="px-1 text-[11px] sm:px-3 sm:text-sm">
+                    <TableHead className="px-1 py-2 text-left text-[11px] sm:px-3 sm:text-sm">
                       Telefon
                     </TableHead>
                   </TableRow>
@@ -955,21 +957,21 @@ function Index() {
                       <TableCell className="px-1 py-2 text-center text-[11px] text-muted-foreground sm:px-3 sm:py-3 sm:text-sm">
                         {i + 1}
                       </TableCell>
-                      <TableCell className="px-1 py-2 sm:px-3 sm:py-3">
+                      <TableCell className="px-1 py-2 text-center sm:px-3 sm:py-3">
                         <button
                           type="button"
                           onClick={() => {
                             setProfilAidattan(true);
                             setProfilGoster(t);
                           }}
-                          className="flex w-full justify-center"
+                          className="inline-flex items-center justify-center"
                         >
                           <span className="shrink-0 scale-90 sm:scale-100">
                             <TalebeAvatar talebe={t} boyut={36} />
                           </span>
                         </button>
                       </TableCell>
-                      <TableCell className="min-w-0 px-1 py-2 font-medium sm:px-3 sm:py-3">
+                      <TableCell className="min-w-0 px-1 py-2 text-left font-medium sm:px-3 sm:py-3">
                         <button
                           type="button"
                           onClick={() => {
@@ -981,20 +983,20 @@ function Index() {
                           {t.isim}
                         </button>
                       </TableCell>
-                      <TableCell className="min-w-0 px-1 py-2 text-[11px] text-muted-foreground sm:px-3 sm:py-3 sm:text-sm">
-                        <span className="block truncate">{t.sinif || "—"}</span>
-                      </TableCell>
                       <TableCell className="px-1 py-2 text-center text-[11px] tabular-nums text-muted-foreground sm:px-3 sm:py-3 sm:text-sm">
                         {yasHesapla(t.dogum) ?? "—"}
                       </TableCell>
-                      <TableCell className="min-w-0 px-1 py-2 text-[11px] text-muted-foreground sm:px-3 sm:py-3 sm:text-sm">
+                      <TableCell className="min-w-0 px-1 py-2 text-left text-[11px] text-muted-foreground sm:px-3 sm:py-3 sm:text-sm">
+                        <span className="block truncate">{t.sinif || "—"}</span>
+                      </TableCell>
+                      <TableCell className="min-w-0 px-1 py-2 text-left text-[11px] text-muted-foreground sm:px-3 sm:py-3 sm:text-sm">
                         <span className="block truncate">
                           {t.grup
                             ? (GRUPLAR.find((g) => g.id === t.grup)?.ad ?? "—")
                             : "—"}
                         </span>
                       </TableCell>
-                      <TableCell className="min-w-0 px-1 py-2 text-[11px] tabular-nums text-muted-foreground sm:px-3 sm:py-3 sm:text-sm">
+                      <TableCell className="min-w-0 px-1 py-2 text-left text-[11px] tabular-nums text-muted-foreground sm:px-3 sm:py-3 sm:text-sm">
                         {t.telefon ? (
                           <a
                             href={`tel:${t.telefon.replace(/\s+/g, "")}`}
